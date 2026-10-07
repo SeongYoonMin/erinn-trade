@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { BARTER_ITEMS, REGIONS, type RegionId } from "@/data/barter-items";
-import { MaterialModal } from "@/components/trade/MaterialModal";
+import { MaterialTooltip } from "@/components/trade/MaterialTooltip";
 
 const REGION_IDS = Object.keys(REGIONS) as RegionId[];
 
@@ -26,7 +26,6 @@ function TierBadge({ tier }: { tier: number }) {
 
 export function BarterList() {
   const [activeRegion, setActiveRegion] = useState<RegionId>("karu");
-  const [selectedMaterial, setSelectedMaterial] = useState<string | null>(null);
   const items = BARTER_ITEMS.filter((item) => item.region === activeRegion);
 
   return (
@@ -54,7 +53,7 @@ export function BarterList() {
       {/* 아이템 카드 그리드 */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {items.map((item) => (
-          <div key={item.id} className="rounded-lg border bg-card p-3 text-card-foreground">
+          <div key={item.id} className="rounded-lg border bg-card p-3 text-card-foreground overflow-visible">
             <div className="flex items-start justify-between gap-2">
               <div className="flex items-center gap-1.5 min-w-0">
                 <TierBadge tier={item.tier} />
@@ -64,28 +63,18 @@ export function BarterList() {
                 주간 {item.weeklyLimit}회
               </span>
             </div>
-            <ul className="mt-2 space-y-0.5 text-sm text-muted-foreground">
+            <p className="mt-2 mb-0.5 text-xs text-muted-foreground/70">1회당</p>
+            <ul className="space-y-0.5 text-sm text-muted-foreground">
               {item.required.map((r) => (
                 <li key={r.name}>
-                  <button
-                    onClick={() => setSelectedMaterial(r.name)}
-                    className="underline-offset-2 hover:underline hover:text-foreground transition-colors text-left"
-                  >
-                    {r.name}
-                  </button>
-                  {" "}×{r.qty}
+                  <MaterialTooltip name={r.name} />
+                  {" "}×{r.qty / item.weeklyLimit}
                 </li>
               ))}
             </ul>
           </div>
         ))}
       </div>
-      {selectedMaterial && (
-        <MaterialModal
-          materialName={selectedMaterial}
-          onClose={() => setSelectedMaterial(null)}
-        />
-      )}
     </section>
   );
 }

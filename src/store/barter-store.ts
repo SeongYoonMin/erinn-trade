@@ -21,6 +21,7 @@ interface BarterTodoState {
   lastResetMs: number;
   increment: (id: string, limit: number) => void;
   decrement: (id: string) => void;
+  setProgress: (id: string, value: number, limit: number) => void;
   resetIfNewWeek: () => void;
 }
 
@@ -40,6 +41,11 @@ export const useBarterStore = create<BarterTodoState>()(
           const current = state.progress[id] ?? 0;
           if (current <= 0) return state;
           return { progress: { ...state.progress, [id]: current - 1 } };
+        }),
+      setProgress: (id, value, limit) =>
+        set((state) => {
+          const clamped = Math.max(0, Math.min(limit, value));
+          return { progress: { ...state.progress, [id]: clamped } };
         }),
       resetIfNewWeek: () => {
         const lastReset = getLastSaturdayResetMs();

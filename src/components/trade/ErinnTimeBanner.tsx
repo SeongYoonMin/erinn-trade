@@ -6,7 +6,7 @@ const KST_OFFSET = 9 * 3600_000;
 const ERINN_DAY_MS = 36 * 60 * 1000; // 36분 = 1 에린일
 const ERINN_HOUR_MS = 90_000;         // 90초 = 1 에린시간
 const ERINN_MIN_MS = 1_500;           // 1.5초 = 1 에린분
-const SEASON_END = new Date("2026-08-13T00:00:00+09:00");
+const SEASON_END = new Date("2027-03-04T00:00:00+09:00");
 
 function getNextSaturdayResetMs(): number {
   const nowKST = Date.now() + KST_OFFSET;
